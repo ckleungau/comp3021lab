@@ -2,8 +2,9 @@ package base;
 
 import java.util.ArrayList;
 
-public class Folder {
+public class Folder implements Comparable<Folder> {
 
+	// Lab 2
     private ArrayList<Note> notes;
     private String name;
 
@@ -55,5 +56,29 @@ public class Folder {
 	}
 	
     
+    // Lab 3
+	@Override
+	public int compareTo(Folder o) {
+		// smaller name is considered as smaller
+		if (this.name.compareTo(o.name) > 0) {
+			return 1;
+		}else if (this.date.compareTo(o.date) < 0) {
+			return -1;
+		}else {
+			return 0;
+		}
+	}
+	
+	public void sortNotes() {
+		Collection.sort(notes);
+	}
+	
+	public List<Note> searchNotes(String keywords) {
+		List<Note> 
+		String[] tokens = keywords.split(" ", 0);
+		for (int i = 0; i < tokens.length; i++) {
+			
+		}
+	}
 
 }

@@ -7,5 +7,11 @@ public class TextNote extends Note {
     public TextNote(String content) {
         super(content);
     }
+    
+    // Lab 3
+    public TextNote(String title, String content) {
+        super(title);
+        this.content = content;
+    }
 
 }

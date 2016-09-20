@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class NoteBook {
 
+	// Lab 2
 	private ArrayList<Folder> folders;
 	
 	public  NoteBook() {
@@ -48,6 +49,12 @@ public class NoteBook {
 		return folders;
 	}
 	
-	
+	// Lab 3
+	public void sortFolders() {
+		for(Folder f : folders ) {
+			f.sortNotes();
+		}
+		Collection.sort(folders);
+	}
 	
 }

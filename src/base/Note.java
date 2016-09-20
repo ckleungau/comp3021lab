@@ -2,8 +2,9 @@ package base;
 
 import java.util.Date;
 
-public class Note {
+public class Note implements Comparable<Note> {
 
+	// Lab 2
     private Date date;
     private String title;
     
@@ -31,7 +32,22 @@ public class Note {
 		return true;
 	}
 
+	// Lab 3
+	@Override
+	public int compareTo(Note o) {
+		// recent date is considered as smaller
+		if (this.date > o.date) {
+			return 1;
+		}else if (this.date < o.date) {
+			return -1;
+		}else {
+			return 0;
+		}
+	}
 	
+	public String toString() {
+		return date.toString() + "\t" + title;
+	}
     
     
 }
