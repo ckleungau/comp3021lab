@@ -1,6 +1,8 @@
 package base;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Folder implements Comparable<Folder> {
 
@@ -62,7 +64,7 @@ public class Folder implements Comparable<Folder> {
 		// smaller name is considered as smaller
 		if (this.name.compareTo(o.name) > 0) {
 			return 1;
-		}else if (this.date.compareTo(o.date) < 0) {
+		}else if (this.name.compareTo(o.name) < 0) {
 			return -1;
 		}else {
 			return 0;
@@ -70,15 +72,45 @@ public class Folder implements Comparable<Folder> {
 	}
 	
 	public void sortNotes() {
-		Collection.sort(notes);
+		List<Note> collection = new ArrayList<Note>();
+		Collections.sort(collection);
 	}
-	
+
 	public List<Note> searchNotes(String keywords) {
-		List<Note> 
-		String[] tokens = keywords.split(" ", 0);
-		for (int i = 0; i < tokens.length; i++) {
-			
+		System.out.println(keywords);
+		
+		List<Note> searchList = new ArrayList<Note>();
+		for (Note note : notes) {
+			String[] tokens = keywords.split(" ", 0);
+			for (int i = 0; i < tokens.length; i++) {
+
+				if (tokens[i] == "or" || tokens[i] == "OR" || tokens[i] == "oR" || tokens[i] == "Or"  ) {
+//					if (note.equals(tokens[i-1]) || note.equals(tokens[i+1])) {
+//						searchList.add(note);
+//					}
+					System.out.println(tokens[i]);
+				}
+				System.out.println(tokens[i]);
+			}
+//				if (note instanceof ImageNote) {
+//					if (note.getTitle().equals(tokens[i])) {
+//						searchList.add(note);
+//					}
+//				}
+//				if (note instanceof TextNote) {
+//					if (note.getTitle().equals(tokens[i]) || note.get)
+//				}
+//				
+//				
+//				
+//				if (tokens[i] == "or" || tokens[i] == "OR" || tokens[i] == "oR" || tokens[i] == "Or"  ) {
+//					if (note.equals(tokens[i-1]) || note.equals(tokens[i+1])) {
+//						searchList.add(note);
+//					}
+//				}
+//			}
 		}
+		return searchList;
 	}
 
 }

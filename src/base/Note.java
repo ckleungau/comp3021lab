@@ -36,9 +36,9 @@ public class Note implements Comparable<Note> {
 	@Override
 	public int compareTo(Note o) {
 		// recent date is considered as smaller
-		if (this.date > o.date) {
+		if (this.date.compareTo(o.date) > 0) {
 			return 1;
-		}else if (this.date < o.date) {
+		}else if (this.date.compareTo(o.date) < 0) {
 			return -1;
 		}else {
 			return 0;
