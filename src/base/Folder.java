@@ -75,40 +75,81 @@ public class Folder implements Comparable<Folder> {
 		List<Note> collection = new ArrayList<Note>();
 		Collections.sort(collection);
 	}
-
+	
 	public List<Note> searchNotes(String keywords) {
-		System.out.println(keywords);
-		
 		List<Note> searchList = new ArrayList<Note>();
+		String[] tokens = keywords.toLowerCase().split(" ", 0);
+		boolean matchTitle = false;
+		boolean matchContent = false;
+		
+		
 		for (Note note : notes) {
-			String[] tokens = keywords.split(" ", 0);
-			for (int i = 0; i < tokens.length; i++) {
-
-				if (tokens[i] == "or" || tokens[i] == "OR" || tokens[i] == "oR" || tokens[i] == "Or"  ) {
-//					if (note.equals(tokens[i-1]) || note.equals(tokens[i+1])) {
-//						searchList.add(note);
-//					}
-					System.out.println(tokens[i]);
+			
+			int index = 0;
+			if (note instanceof ImageNote) {
+				while (index < tokens.length) {
+					if (index != tokens.length-1) {
+						if (tokens[index+1].equals("or")) {
+							if (note.getTitle().toLowerCase().contains(tokens[index]) || note.getTitle().toLowerCase().contains(tokens[index+2])) {
+								matchTitle = true;
+								index = index+3;
+							}else {
+								matchTitle = false;
+								break;
+							}
+						}else if (!tokens[index+1].equals("or")) {
+							if (note.getTitle().toLowerCase().contains(tokens[index])) {
+								matchTitle = true;
+								index++;
+							}else {
+								matchTitle = false;
+								break;
+							}
+						}
+					}else {
+						if (note.getTitle().toLowerCase().contains(tokens[index])) {
+							matchTitle = true;
+							index++;
+						}else {
+							matchTitle = false;
+							break;
+						}
+					}
 				}
-				System.out.println(tokens[i]);
+			}else if (note instanceof TextNote) {
+				TextNote tNote = (TextNote)note;
+				while(index < tokens.length) {
+					if (index != tokens.length-1) {
+						if (tokens[index+1].equals("or")) {
+							if (tNote.getTitle().toLowerCase().contains(tokens[index]) || tNote.getTitle().toLowerCase().contains(tokens[index+2]) ||
+								tNote.getContent().toLowerCase().contains(tokens[index]) || tNote.getContent().toLowerCase().contains(tokens[index+2])) {
+								matchContent = true;
+								index = index+3;
+							}else {
+								matchContent = false;
+								break;
+							}
+						}else if (!tokens[index+1].equals("or")) {
+							if (tNote.getTitle().toLowerCase().contains(tokens[index]) || tNote.getContent().toLowerCase().contains(tokens[index])) {
+								matchContent = true;
+								index++;
+							}else {
+								matchContent = false;
+								break;
+							}
+						}
+					}else {
+						if (tNote.getTitle().toLowerCase().contains(tokens[index]) || tNote.getContent().toLowerCase().contains(tokens[index])) {
+							matchContent = true;
+							index++;
+						}else {
+							matchContent = false;
+							break;
+						}
+					}
+				}
 			}
-//				if (note instanceof ImageNote) {
-//					if (note.getTitle().equals(tokens[i])) {
-//						searchList.add(note);
-//					}
-//				}
-//				if (note instanceof TextNote) {
-//					if (note.getTitle().equals(tokens[i]) || note.get)
-//				}
-//				
-//				
-//				
-//				if (tokens[i] == "or" || tokens[i] == "OR" || tokens[i] == "oR" || tokens[i] == "Or"  ) {
-//					if (note.equals(tokens[i-1]) || note.equals(tokens[i+1])) {
-//						searchList.add(note);
-//					}
-//				}
-//			}
+			if (matchTitle || matchContent) { searchList.add(note); }
 		}
 		return searchList;
 	}
