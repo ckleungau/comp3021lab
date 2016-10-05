@@ -1,10 +1,11 @@
 package base;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Folder implements Comparable<Folder> {
+public class Folder implements Comparable<Folder>,Serializable {
 
 	// Lab 2
     private ArrayList<Note> notes;

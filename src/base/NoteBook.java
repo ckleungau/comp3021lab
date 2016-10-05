@@ -1,16 +1,38 @@
 package base;
 
+import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NoteBook {
+public class NoteBook implements Comparable<NoteBook>, Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	// Lab 2
 	private ArrayList<Folder> folders;
 	
-	public  NoteBook() {
+	public NoteBook() {
 		folders = new ArrayList<Folder>();
+	}
+	
+	// Task 5.2
+	public NoteBook(String file) {
+		FileInputStream fis = null;
+		ObjectInputStream in = null;
+		try {
+			fis = new FileInputStream(file);
+			in = new ObjectInputStream(fis);
+			NoteBook nb = (NoteBook) in.readObject();
+			this.folders = nb.getFolders();
+			in.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean createTextNote(String folderName, String title) {
@@ -72,5 +94,33 @@ public class NoteBook {
     	TextNote note = new TextNote(title, content);
     	return insertNote(folderName, note);
     }
+
+    // Lab 5
+	@Override
+	public int compareTo(NoteBook arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	public boolean save(String file) {
+		// TODO
+		FileOutputStream fos = null;
+		ObjectOutputStream out = null;
+		try{
+			// TODO
+			fos = new FileOutputStream(file);
+			out = new ObjectOutputStream(fos);
+			out.writeObject(this);
+			out.close();
+			fos.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 	
 }
