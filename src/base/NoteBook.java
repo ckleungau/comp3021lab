@@ -17,7 +17,7 @@ public class NoteBook implements Comparable<NoteBook>, Serializable{
 	private ArrayList<Folder> folders;
 	
 	public NoteBook() {
-		folders = new ArrayList<Folder>();
+		this.folders = new ArrayList<Folder>();
 	}
 	
 	// Task 5.2
@@ -34,16 +34,21 @@ public class NoteBook implements Comparable<NoteBook>, Serializable{
 			e.printStackTrace();
 		}
 	}
-	
-	public boolean createTextNote(String folderName, String title) {
-		TextNote note = new TextNote(title);
-		return insertNote(folderName, note);
-	}
 
 	public boolean createImageNote(String folderName, String title) {
 		ImageNote note = new ImageNote(title);
 		return insertNote(folderName, note);
 	}
+	
+	public boolean createTextNote(String folderName, String title) {
+		TextNote note = new TextNote(title);
+		return insertNote(folderName, note);
+	}
+	
+    public boolean createTextNote(String folderName, String title, String content) {
+    	TextNote note = new TextNote(title, content);
+    	return insertNote(folderName, note);
+    }
 	
 	private boolean insertNote(String folderName, Note note) {
 		// Step 1
@@ -60,7 +65,7 @@ public class NoteBook implements Comparable<NoteBook>, Serializable{
 		
 		// Step 2
 		for(Note n: target.getNotes()) {
-			if (n.getTitle().equals(note.getTitle())) {
+			if (n.equals(note)) {
 				System.out.println("Creating note " + note.getTitle() + " under folder " + folderName + " failed");
 				return false;
 			}
@@ -70,30 +75,24 @@ public class NoteBook implements Comparable<NoteBook>, Serializable{
 	}
 	
 	public ArrayList<Folder> getFolders() {
-		return folders;
+		return this.folders;
 	}
 	
 	// Lab 3
 	public void sortFolders() {
-		for(Folder f : folders) {
+		for(Folder f : this.folders) {
 			f.sortNotes();
 		}
-		Collections.sort(folders);
+		Collections.sort(this.folders);
 	}
 	
 	public List<Note> searchNotes(String keywords) {
 		List<Note> searchResult = new ArrayList<Note>();
-		for(Folder f : folders) {
+		for(Folder f : this.getFolders()) {
 			searchResult.addAll(f.searchNotes(keywords));
 		}
 		return searchResult;
 	}
-	
-	
-    public boolean createTextNote(String folderName, String title, String content) {
-    	TextNote note = new TextNote(title, content);
-    	return insertNote(folderName, note);
-    }
 
     // Lab 5
 	@Override

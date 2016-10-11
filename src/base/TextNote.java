@@ -1,6 +1,5 @@
 package base;
 
-import java.io.Serializable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,9 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class TextNote extends Note implements Serializable {
+public class TextNote extends Note {
 
-	String content;
+	public String content;
 	
     public TextNote(String content) {
         super(content);
