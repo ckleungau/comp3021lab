@@ -22,7 +22,10 @@ public class JUnitTest {
 		nb.createTextNote("Note4", "lab4","testing");
 		List<Note> notes = nb.searchNotes("java or DUE or testing");
 		System.out.println(notes.size());
-		assertEquals("The size of the search results is not match", 4, notes.size(), 0.0);
+		// correct testing
+		assertEquals("The size of the search results is not match", 3, notes.size(), 0.0);
+		// buggy testing
+//		assertEquals("The size of the search results is not match", 4, notes.size(), 0.0);
 		HashSet<String> titles = new HashSet<String>();
 		for (Note note : notes) {
 			titles.add(note.getTitle());
@@ -36,8 +39,14 @@ public class JUnitTest {
 	
 	// To do
 	// Design the second test case which reveals the bug in function unknownFunction()
-	
-	
-
+	@Test
+	public void testCountLetters() {
+		TextNote tNote = new TextNote("abc", "qwerty");
+		Character actualChar = tNote.countLetters();
+		Character expectedChar = new Character('a');
+		System.out.println("Expected Most Frequent Letter: " + expectedChar);
+		System.out.println("Actual Most Frequent Letter: " + actualChar);
+		assertEquals("Test fail!" , expectedChar, actualChar);
+	}
 
 }
