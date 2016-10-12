@@ -85,157 +85,71 @@ public class Folder implements Comparable<Folder>,Serializable {
 		List<String> andList = new ArrayList<>();
 		
 		// Loop key_tokens to separate key_tokens into sublists
-		for (int _or=0; _or < key_tokens.length; _or++) {
-			if (key_tokens[_or] != null && key_tokens[_or].equals("or")) {
-				// add keys to check with or-relationship
-				orList.add(key_tokens[_or-1]);
-				orList.add(key_tokens[_or+1]);
-				// clear those keys to null 
-				key_tokens[_or-1] = key_tokens[_or] = key_tokens[_or+1] = null;
+		int count = 0;
+		while (count < key_tokens.length) {
+			String str = "";
+			// add keys to check with or-relationship
+			if ((count+1 < key_tokens.length) && (key_tokens[count+1].equals("or"))) {
+				while ((count+1 < key_tokens.length) && (key_tokens[count+1].equals("or"))) {
+					str+= " " + key_tokens[count];
+					count+=2;
+				}
+				str += " " + key_tokens[count];
+				orList.add(str);
+				count++;
+			}else {
+				andList.add(key_tokens[count]);
+				count++;
 			}
 		}
 		// add keys to check with and-relationship
-		for (int _and = 0; _and < key_tokens.length; _and++) {
-			if (key_tokens[_and] != null) {
-				andList.add(key_tokens[_and]);
-			}
+		if (orList.size() > 0) {
+			andList.addAll(orList);
 		}
 		
-//		System.out.println(andList);
-//		System.out.println(orList);
-		
-		for (Note note : this.notes) {
-			boolean file_found = false;
-			// Search for ImageNote
+		for (Note note : this.getNotes()) {
+			// setup boolean variables for checking whether the notes were matched
+			boolean found = false;
+			boolean and_check = false;
 			if (note instanceof ImageNote) {
+				// Search for ImageNote
 				String img_title = note.getTitle().toLowerCase();
-				for (int i=0; i < andList.size(); i++) {
-					String str = andList.get(i);
-					if (img_title.contains(str)) {
-						file_found = true;
-					}else {
-						file_found = false;
+				for (String str : andList) {
+					and_check = true;
+					boolean or_check = false;
+					String[] or_keys = str.trim().split(" ");
+					for (int j=0; j < or_keys.length; j++) {
+						if (img_title.contains(or_keys[j])) {
+							or_check = true;
+						}
 					}
+					found = (and_check && or_check);
 				}
-				for (int j=0; j < orList.size(); j+=2) {
-					if (img_title.contains(orList.get(j)) || img_title.contains(orList.get(j+1))) {
-						file_found = true;
-					}else {
-						file_found = false;
-					}
+				if (found) {
+					searchList.add(note);
 				}
-				
 			}else if (note instanceof TextNote) {
+				// Search for TextNote
 				TextNote tNote = (TextNote)note;
 				String txt_title = tNote.getTitle().toLowerCase();
 				String txt_content = tNote.getContent().toLowerCase();
-				for (int i=0; i < andList.size(); i++) {
-					String str = andList.get(i);
-					if (txt_title.contains(str)) {
-						file_found = true;
-					}else {
-						file_found = false;
+				for (String str : andList) {
+					and_check = true;
+					boolean or_check = false;
+					String[] or_keys = str.trim().split(" ");
+					for (int j=0; j < or_keys.length; j++) {
+						if (txt_title.contains(or_keys[j]) || txt_content.contains(or_keys[j])) {
+							or_check = true;
+						}
 					}
+					found = (and_check && or_check);
 				}
-				for (int j=0; j < orList.size(); j++) {
-					if (txt_title.contains(orList.get(j)) || txt_title.contains(orList.get(j+1))) {
-						file_found = true;
-					}else {
-						file_found = false;
-					}
-					j++;
-				}
-				for (int i=0; i < andList.size(); i++) {
-					String str = andList.get(i);
-					if (txt_content.contains(str)) {
-						file_found = true;
-					}else {
-						file_found = false;
-					}
-				}
-				for (int j=0; j < orList.size(); j+=2) {
-					if (txt_content.contains(orList.get(j)) || txt_content.contains(orList.get(j+1))) {
-						file_found = true;
-					}else {
-						file_found = false;
-					}
+				if (found) {
+					searchList.add(note);
 				}
 			}
-			if (file_found) searchList.add(note);
 		}
-		
-//		boolean matchTitle = false;
-//		boolean matchContent = false;
-//		
-//		
-//		for (Note note : notes) {
-//			
-//			int index = 0;
-//			if (note instanceof ImageNote) {
-//				while (index < tokens.length) {
-//					if (index != tokens.length-1) {
-//						if (tokens[index+1].equals("or")) {
-//							if (note.getTitle().toLowerCase().contains(tokens[index]) || note.getTitle().toLowerCase().contains(tokens[index+2])) {
-//								matchTitle = true;
-//								index = index+3;
-//							}else {
-//								matchTitle = false;
-//								break;
-//							}
-//						}else if (!tokens[index+1].equals("or")) {
-//							if (note.getTitle().toLowerCase().contains(tokens[index])) {
-//								matchTitle = true;
-//								index++;
-//							}else {
-//								matchTitle = false;
-//								break;
-//							}
-//						}
-//					}else {
-//						if (note.getTitle().toLowerCase().contains(tokens[index])) {
-//							matchTitle = true;
-//							index++;
-//						}else {
-//							matchTitle = false;
-//							break;
-//						}
-//					}
-//				}
-//			}else if (note instanceof TextNote) {
-//				TextNote tNote = (TextNote)note;
-//				while(index < tokens.length) {
-//					if (index != tokens.length-1) {
-//						if (tokens[index+1].equals("or")) {
-//							if (tNote.getTitle().toLowerCase().contains(tokens[index]) || tNote.getTitle().toLowerCase().contains(tokens[index+2]) ||
-//								tNote.getContent().toLowerCase().contains(tokens[index]) || tNote.getContent().toLowerCase().contains(tokens[index+2])) {
-//								matchContent = true;
-//								index = index+3;
-//							}else {
-//								matchContent = false;
-//								break;
-//							}
-//						}else if (!tokens[index+1].equals("or")) {
-//							if (tNote.getTitle().toLowerCase().contains(tokens[index]) || tNote.getContent().toLowerCase().contains(tokens[index])) {
-//								matchContent = true;
-//								index++;
-//							}else {
-//								matchContent = false;
-//								break;
-//							}
-//						}
-//					}else {
-//						if (tNote.getTitle().toLowerCase().contains(tokens[index]) || tNote.getContent().toLowerCase().contains(tokens[index])) {
-//							matchContent = true;
-//							index++;
-//						}else {
-//							matchContent = false;
-//							break;
-//						}
-//					}
-//				}
-//			}
-//			if (matchTitle || matchContent) { searchList.add(note); }
-//		}
+				
 		return searchList;
 	}
 
