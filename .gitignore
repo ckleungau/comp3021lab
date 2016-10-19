@@ -1,5 +1,6 @@
-/bin/
-/.idea
-COMP30213021_syllabus.txt
+.idea/
 comp3021.iml
-test.ser
+bin/*
+
+# Ignore Mac DS_Store files
+**/.DS_Store
