@@ -1,8 +1,5 @@
 package ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import base.Folder;
 import base.Note;
 import base.NoteBook;
@@ -16,18 +13,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -117,13 +111,8 @@ public class NoteBookWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				currentSearch = txt_search.getText();
-				List<Note> notes = noteBook.searchNotes(currentSearch);
-				ArrayList<String> currentList = new ArrayList<String>();
-				for (Note note : notes) {
-					currentList.add(note.getTitle());
-				}
-				updateListView(currentList);
 				textAreaNote.setText("");
+				updateListView();
 			}
 		});
 
@@ -135,15 +124,7 @@ public class NoteBookWindow extends Application {
 				currentSearch = "";
 				txt_search.setText("");
 				textAreaNote.setText("");
-				ArrayList<String> currentList = new ArrayList<String>();
-				for (Folder folder : noteBook.getFolders()) {
-					if (folder.getName().equals(currentFolder)) {
-						for (Note note : folder.getNotes()) {
-							currentList.add(note.getTitle());
-						}
-					}
-				}
-				updateListView(currentList);
+				updateListView();
 			}
 		});
 
@@ -174,23 +155,13 @@ public class NoteBookWindow extends Application {
 				currentFolder = t1.toString();
 				// this contains the name of the folder selected
 				// TODO update listview
-				
-				ArrayList<String> currentList = new ArrayList<String>();
-				for (Folder folder : noteBook.getFolders()) {
-					if (folder.getName().equals(currentFolder)) {
-						for (Note note : folder.getNotes()) {
-							currentList.add(note.getTitle());
-						}
-					}
-				}
-				updateListView(currentList);
+				updateListView();
 
 			}
 
 		});
 
 		foldersComboBox.setValue("-----");
-//		foldersComboBox.setValue(folders.get(0).getName());
 
 		titleslistView.setPrefHeight(100);
 
@@ -203,7 +174,6 @@ public class NoteBookWindow extends Application {
 				// This is the selected title
 				// TODO load the content of the selected note in
 				// textAreNote
-//				String content = "";
 				String content = "";
 				for (Folder folder : noteBook.getFolders()) {
 					if (folder.getName().equals(currentFolder)) {
@@ -226,21 +196,31 @@ public class NoteBookWindow extends Application {
 		return vbox;
 	}
 
-	private void updateListView(ArrayList<String> noteList) {
-//		ArrayList<String> list = new ArrayList<String>();
+	private void updateListView() {
+		ArrayList<String> list = new ArrayList<String>();
 
 		// TODO populate the list object with all the TextNote titles of the
 		// currentFolder
-//		for (Folder folder : noteBook.getFolders()) {
-//			if (folder.getName().equals(currentFolder)) {
-//				for (Note note : folder.getNotes()) {
-//					list.add(note.getTitle());
-//				}
-//			}
-//		}
+        List<Note> notes = null;
+		for (Folder folder : noteBook.getFolders()) {
+			if (folder.getName().equals(currentFolder)) {
+				if (!currentSearch.equals("")) {
+                    // search if currentSearch contains some text
+                    notes = folder.searchNotes(currentSearch);
+                }else {
+                    // otherwise, get the whole list of notes from the current folder
+                    notes = folder.getNotes();
+                }
 
-//		ObservableList<String> combox2 = FXCollections.observableArrayList(list);
-		ObservableList<String> combox2 = FXCollections.observableArrayList(noteList);
+			}
+		}
+        if (notes != null) {
+            for (Note note : notes) {
+                list.add(note.getTitle());
+            }
+        }
+
+		ObservableList<String> combox2 = FXCollections.observableArrayList(list);
 		titleslistView.setItems(combox2);
 		textAreaNote.setText("");
 	}
