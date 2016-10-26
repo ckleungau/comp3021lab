@@ -30,7 +30,11 @@ public class TextNote extends Note {
     
     // Lab 3
     public String getContent() { return content; }
-        
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     // Lab 5
     private String getTextFromFile(String absolutePath) {
     	String result = "";

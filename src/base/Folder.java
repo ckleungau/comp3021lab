@@ -20,6 +20,15 @@ public class Folder implements Comparable<Folder>,Serializable {
         notes.add(newNote);
     }
 
+    public boolean removeNotes(String title) {
+        List<Note> trash= searchNotes(title);
+        if (trash != null) {
+            notes.removeAll(trash);
+            return true;
+        }
+        return false;
+    }
+
     public String getName() {
         return name;
     }

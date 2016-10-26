@@ -118,8 +118,9 @@ public class NoteBook implements Comparable<NoteBook>, Serializable{
 		}
 		return true;
 	}
-	
-	
-	
-	
+
+//	public boolean load(String File) {
+//
+//    }
+
 }
